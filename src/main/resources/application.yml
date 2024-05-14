@@ -14,3 +14,24 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  config:
+    import:
+      - "application_qa.yml"
+      - "application_prod.yml"
+  profiles:
+    active:
+      - "qa"
+
+build:
+  version: "3.0"
+
+
+loans:
+  message: "Welcome to loans microservice local RESP API"
+  contactDetails:
+    name: "sultan khalil - JAVA DEVELOPER"
+    email: "sultan.khalil@gmail.com"
+  onCallSupport:
+    - 00962738947822
+    - 00962797309482

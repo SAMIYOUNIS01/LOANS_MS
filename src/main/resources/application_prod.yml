@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+
+
+build:
+  version: "1.0"
+
+
+loans:
+  message: "Welcome to loans microservice RESP API"
+  contactDetails:
+    name: "Sammy Younis - JAVA DEVELOPER"
+    email: "sam.younis.sy@gmail.com"
+  onCallSupport:
+    - 00962797916142
+    - 00962797946274

@@ -2,8 +2,10 @@ package com.microservices.loans.controller;
 
 import com.microservices.loans.constants.LoansConstants;
 import com.microservices.loans.model.dto.ErrorResponseDto;
+import com.microservices.loans.model.dto.LoansContactDetailsDto;
 import com.microservices.loans.model.dto.LoansDto;
 import com.microservices.loans.model.dto.ResponseDto;
+import com.microservices.loans.model.entity.Loans;
 import com.microservices.loans.service.ILoansService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +16,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "api" , produces = MediaType.APPLICATION_JSON_VALUE)
-@AllArgsConstructor
 @Validated
 @Tag(
         name = "CRUD REST APIs for loans in bank",
@@ -32,7 +36,21 @@ import org.springframework.web.bind.annotation.*;
 public class LoansController {
 
 
-    ILoansService loansService;
+    public LoansController(ILoansService iLoansService){
+        this.loansService = iLoansService;
+    }
+
+    private final ILoansService loansService;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    LoansContactDetailsDto loansContactDetailsDto;
+
+
+    @Value("${build.version}")
+    private String buildVersion;
 
     @Operation(
             summary = "Create Loan REST API",
@@ -163,6 +181,79 @@ public class LoansController {
                 LoansConstants.STATUS_417,
                 LoansConstants.MESSAGE_417_DELETE
         ));
+    }
+    @Operation(
+            summary = "Get Build Version REST API",
+            description = "REST API to get build version for loans microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS OK"
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "HTTP STATUS INTERNAL SERVER ERROR",
+            content = @Content(
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+    )
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildVersion(){
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(
+                buildVersion
+        );
+    }
+
+
+
+
+    @Operation(
+            summary = "Get Build Version REST API",
+            description = "REST API to get java version for loans microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS OK"
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "HTTP STATUS INTERNAL SERVER ERROR",
+            content = @Content(
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+    )
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion(){
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(
+                environment.getProperty("JAVA_HOME")
+        );
+    }
+    @Operation(
+            summary = "Get Contact Information REST API",
+            description = "REST API to get contact information for loans microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS OK"
+    )
+    @ApiResponse(
+            responseCode = "500",
+            description = "HTTP STATUS INTERNAL SERVER ERROR",
+            content = @Content(
+                    schema = @Schema(implementation = ErrorResponseDto.class)
+            )
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<LoansContactDetailsDto> getContactDetails(){
+        return ResponseEntity.status(
+                HttpStatus.OK
+        ).body(
+                loansContactDetailsDto
+        );
     }
 
 }
