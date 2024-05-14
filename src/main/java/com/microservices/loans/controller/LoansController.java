@@ -35,12 +35,13 @@ import org.springframework.web.bind.annotation.*;
 )
 public class LoansController {
 
+    private final ILoansService iloansService;
 
     public LoansController(ILoansService iLoansService){
-        this.loansService = iLoansService;
+        this.iloansService = iLoansService;
     }
 
-    private final ILoansService loansService;
+
 
     @Autowired
     private Environment environment;
@@ -71,7 +72,7 @@ public class LoansController {
             @Pattern (regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
             @RequestParam
             String mobileNumber){
-        loansService.createLoan(mobileNumber);
+        iloansService.createLoan(mobileNumber);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto(
                 LoansConstants.STATUS_201,
                 LoansConstants.MESSAGE_201
@@ -102,7 +103,7 @@ public class LoansController {
              @RequestParam
              String mobileNumber
             ){
-        LoansDto loansDto = loansService.fetchLoansByMobileNumber(mobileNumber);
+        LoansDto loansDto = iloansService.fetchLoansByMobileNumber(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
 
@@ -129,7 +130,7 @@ public class LoansController {
     })
     @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateLoans (@Valid @RequestBody LoansDto loansDto){
-        boolean isUpdated = loansService.updateLoans(loansDto);
+        boolean isUpdated = iloansService.updateLoans(loansDto);
         if(isUpdated){
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(
                     LoansConstants.STATUS_200,
@@ -170,7 +171,7 @@ public class LoansController {
     public ResponseEntity<ResponseDto> deleteLoansByMobileNumber(
             @Pattern(regexp = "(^$|[0-9]{10})" , message = "Mobile number must be 10 digits")
             @RequestParam String mobileNumber){
-        boolean isDeleted = loansService.deleteLonasByMobileNumber(mobileNumber);
+        boolean isDeleted = iloansService.deleteLonasByMobileNumber(mobileNumber);
         if (isDeleted){
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto(
                     LoansConstants.STATUS_200,
