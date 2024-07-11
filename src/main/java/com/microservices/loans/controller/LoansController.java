@@ -107,8 +107,9 @@ public class LoansController {
              @RequestParam
              String mobileNumber
             ){
-        logger.debug("correlationID found in loans microservice : {}" , correlationID);
+        logger.debug("fetchLoansByMobileNumber method start");
         LoansDto loansDto = iloansService.fetchLoansByMobileNumber(mobileNumber);
+        logger.debug("fetchLoansByMobileNumber method end");
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
 

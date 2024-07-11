@@ -41,6 +41,9 @@ management:
   info:
     env:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 
 endpoints:
@@ -70,3 +73,5 @@ logging:
     com:
       microservices:
         loans: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
